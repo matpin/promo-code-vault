@@ -9,7 +9,7 @@ if (!URI) {
   throw new Error("Database URI is missing. Please check your .env file.");
 }
 
-// MongoDB connection function
+// MongoDB connection
 const connectDB = async () => {
   try {
     await mongoose.connect(URI);

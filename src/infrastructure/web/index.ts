@@ -1,6 +1,6 @@
 import express, { Application } from "express";
 import dotenv from "dotenv";
-import connectDB from "../database/connection";
+import connectDB from "../database/mongo/connection";
 import codeRouter from "../web/routes";
 
 dotenv.config();

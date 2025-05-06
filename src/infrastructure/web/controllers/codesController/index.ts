@@ -1,11 +1,15 @@
 import { Request, Response } from "express";
 import CodeModel from "../../../../domain/models";
 import { z } from "zod";
+import { MongoCodeRepository } from "../../../database/mongo";
+import { RepositoryFactory } from "../../../factory";
+
+const repo = RepositoryFactory.getCodeRepository();
 
 // Get all codes
 export const getCodes = async (req: Request, res: Response) => {
   try {
-    let codes = await CodeModel.find();
+    const codes = await repo.getAll();
     res.status(200).send(codes);
   } catch (error) {
     res.status(500).send({ msg: "Internal server error", error });
@@ -27,7 +31,7 @@ export const insertCode = async (req: Request, res: Response) => {
       res.status(400).json({ error: result.error.format() });
     }
 
-    const newCode = await CodeModel.create(result.data);
+    await repo.create(result.data!);
     res.status(201).json({
       msg: "Code created successfully",
     });
@@ -51,11 +55,7 @@ export const updateCode = async (req: Request, res: Response) => {
   }
 
   try {
-    const updatedCode = await CodeModel.findByIdAndUpdate(
-      req.params.id,
-      result.data,
-      { new: true }
-    );
+    const updatedCode = await repo.update(req.params.id, result.data!);
 
     if (!updatedCode) {
       res.status(404).json({ msg: "Code not found" });
@@ -72,7 +72,7 @@ export const updateCode = async (req: Request, res: Response) => {
 // Delete code
 export const deleteCode = async (req: Request, res: Response) => {
   try {
-    const deletedCode = await CodeModel.findByIdAndDelete(req.params.id);
+    const deletedCode = await repo.delete(req.params.id);
 
     if (!deletedCode) {
       res.status(404).json({ msg: "Code not found" });
