@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
-import CodeModel from "../../../../domain/models";
 import { z } from "zod";
-import { MongoCodeRepository } from "../../../database/mongo";
 import { RepositoryFactory } from "../../../factory";
 
 const repo = RepositoryFactory.getCodeRepository();
 
 // Get all codes
-export const getCodes = async (req: Request, res: Response) => {
+export const getCodes = async (_req: Request, res: Response) => {
   try {
     const codes = await repo.getAll();
     res.status(200).send(codes);
