@@ -7,7 +7,7 @@ export class MongoCodeRepository implements CodeRepository {
     return await CodeModel.find();
   }
 
-  async create(data: Code): Promise<Code> {
+  async insert(data: Code): Promise<Code> {
     return await CodeModel.create(data);
   }
 

@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import { RepositoryFactory } from "../../../factory";
-
-const repo = RepositoryFactory.getCodeRepository();
+import {
+  deleteCodeUseCase,
+  getAllCodesUseCase,
+  insertCodeUseCase,
+  updateCodeUseCase,
+} from "../../../../app/usecases";
 
 // Get all codes
 export const getCodes = async (_req: Request, res: Response) => {
   try {
-    const codes = await repo.getAll();
+    const codes = await getAllCodesUseCase();
     res.status(200).send(codes);
   } catch (error) {
     res.status(500).send({ msg: "Internal server error", error });
@@ -29,7 +32,7 @@ export const insertCode = async (req: Request, res: Response) => {
       res.status(400).json({ error: result.error.format() });
     }
 
-    await repo.create(result.data!);
+    await insertCodeUseCase(result.data!);
     res.status(201).json({
       msg: "Code created successfully",
     });
@@ -53,7 +56,7 @@ export const updateCode = async (req: Request, res: Response) => {
   }
 
   try {
-    const updatedCode = await repo.update(req.params.id, result.data!);
+    const updatedCode = await updateCodeUseCase(req.params.id, result.data!);
 
     if (!updatedCode) {
       res.status(404).json({ msg: "Code not found" });
@@ -70,7 +73,7 @@ export const updateCode = async (req: Request, res: Response) => {
 // Delete code
 export const deleteCode = async (req: Request, res: Response) => {
   try {
-    const deletedCode = await repo.delete(req.params.id);
+    const deletedCode = await deleteCodeUseCase(req.params.id);
 
     if (!deletedCode) {
       res.status(404).json({ msg: "Code not found" });
