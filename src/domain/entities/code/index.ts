@@ -1,5 +1,5 @@
 export interface Code {
-    code?: string;
-    gift?: string;
-    expire_code?: string;
-  }
+  code?: string;
+  gift?: string;
+  expire_code?: string;
+}
